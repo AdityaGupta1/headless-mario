@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Nintaco" default="compile" basedir=".">
+  
+  <description>
+    Compiles the Nintaco source, creates the Nintaco.jar and packages it along
+    with the dependent libraries into a .zip file.  It also generates the API
+    Javadoc.  And, it provides a run task.
+  </description>
+  
+  <tstamp>
+    <format property="current-date" pattern="yyyy-MM-dd"/>
+  </tstamp>
+  
+  <path id="libraries">
+    <fileset dir="lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  
+  <target name="clean">
+    <delete dir="build"/>
+    <delete dir="dist"/>
+    <delete dir="archive"/>
+    <delete dir="javadoc"/>
+  </target>
+  
+  <target name="compile" depends="clean">    
+    <mkdir dir="build"/>
+    <mkdir dir="dist"/>
+    <mkdir dir="dist/lib"/>
+    <mkdir dir="dist/lib/native"/>
+    <mkdir dir="archive"/>
+    <mkdir dir="javadoc"/>
+    <copy todir="build">
+      <fileset dir="src" includes="**/*" excludes="**/*.java,**/*.form"/>
+    </copy>
+    <copy todir="dist/lib">
+      <fileset dir="lib" includes="**/*"/>
+    </copy>
+    <copy file="src/nintaco/lgpl-2.1.txt" todir="dist"/>
+    <javac srcdir="src" destdir="build" classpathref="libraries" 
+        includeAntRuntime="false" encoding="UTF-8"/>
+    <jar basedir="build" destfile="dist/Nintaco.jar">
+      <manifest>
+        <attribute name="Class-Path" value="lib/Monte.jar lib/commons-compress-1.12.jar lib/commons-logging-1.2.jar lib/jinput.jar lib/junrar-0.7.jar lib/xz-1.5.jar"/>
+        <attribute name="Main-Class" value="nintaco.Main"/>     
+      </manifest>
+    </jar>  
+    <zip destfile="archive/Nintaco_bin_${current-date}.zip" basedir="dist"/>
+    <javadoc packagenames="nintaco.api" sourcepath="src" destdir="javadoc" windowtitle="Nintaco API" doctitle="Nintaco API" bottom="Copyright &#x00A9; 2017 nintaco.com&#x003C;br/&#x003E;Nintaco is free software; you can redistribute it and/or modify it under the terms of LGPLv2.1."/>
+  </target>
+  
+  <target name="run">
+    <java jar="dist/Nintaco.jar" fork="true"/>
+  </target>
+  
+</project>
