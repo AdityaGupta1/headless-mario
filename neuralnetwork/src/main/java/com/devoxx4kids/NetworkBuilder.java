@@ -1,6 +1,5 @@
 package com.devoxx4kids;
 
-import com.devoxx4kids.marioworld.Nintanco;
 import com.devoxx4kids.species.DefaultMutationConfiguration;
 import com.devoxx4kids.species.MutationConfiguration;
 import com.devoxx4kids.species.SingleNetwork;
@@ -17,9 +16,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static nintaco.api.GamepadButtons.*;
+import static nintaco.api.GamepadButtons.Left;
+import static nintaco.api.GamepadButtons.Right;
+
 public class NetworkBuilder {
 
     static private Random random = new Random();
+    public static final int[] buttons = {A, B, Up, Down, Left, Right};
 
 
     public static SingleNetwork fromTwoParents(SingleNetwork parentOne, SingleNetwork parentTwo, MutationConfiguration mutationConfiguration) {
@@ -31,7 +35,7 @@ public class NetworkBuilder {
             parentTwo = temp;
         }
 
-        List<Node> childNodes = new ArrayList(parentOne.getNodes());
+        List<Node> childNodes = new ArrayList<>(parentOne.getNodes());
         List<Connection> connections = new ArrayList<>();
 
         Consumer<Connection> addToList = x -> {
@@ -60,7 +64,7 @@ public class NetworkBuilder {
             }
         }
 
-        for (int button : Nintanco.buttons) {
+        for (int button :  buttons) {
             nodes.add(new OutputNode(button));
         }
         SingleNetwork singleNetwork = new SingleNetwork(nodes, new ArrayList<>());

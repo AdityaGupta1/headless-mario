@@ -2,7 +2,6 @@ package com.devoxx4kids.species.node;
 
 import com.devoxx4kids.species.BlockReader;
 import com.devoxx4kids.species.SingleNetwork;
-import com.devoxx4kids.supermario.Block;
 
 public abstract class Node {
     double level;

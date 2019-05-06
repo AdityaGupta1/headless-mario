@@ -1,4 +1,4 @@
-package  com.devoxx4kids.supermario;
+package com.devoxx4kids.supermario;
 
 import com.devoxx4kids.supermario.mario.Enemy;
 import com.devoxx4kids.supermario.mario.Player;
@@ -9,24 +9,15 @@ import nintaco.api.GamepadButtons;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MarioGameRunner  implements MarioGameI{
+public class MarioGameRunner implements MarioGameI {
 
-    private int sleepPerFrameUpdate;
     long gameFramesRun = 0;
-    public static void main(String args[]){
-        MarioGameRunnerGUI marioGameRunner = new MarioGameRunnerGUI(60);
-        marioGameRunner.run();
-    }
-
     MarioWorldPanel comp;
     WorldWrapper wrapper;
     GameState gs;
     InputState is = new InputState();
     MarioGameListener gameListener;
-
-    public void setListener(MarioGameListener gameListener){
-        this.gameListener = gameListener;
-    }
+    private int sleepPerFrameUpdate;
 
     public MarioGameRunner(int fps) {
         sleepPerFrameUpdate = fps == -1 ? -1 : 1000 / fps;
@@ -35,8 +26,17 @@ public class MarioGameRunner  implements MarioGameI{
         comp = new MarioWorldPanel(gs, wrapper);
     }
 
+    public static void main(String args[]) {
+        MarioGameRunnerGUI marioGameRunner = new MarioGameRunnerGUI(60);
+        while (true)
+            marioGameRunner.run();
+    }
 
-     protected List<Enemy> generateDefaultEnemies() {
+    public void setListener(MarioGameListener gameListener) {
+        this.gameListener = gameListener;
+    }
+
+    protected List<Enemy> generateDefaultEnemies() {
         List<Enemy> enemiesInactive = new ArrayList<>();
         enemiesInactive.add(new Enemy(352, 192, true));
         enemiesInactive.add(new Enemy(640, 192, true));
@@ -56,15 +56,13 @@ public class MarioGameRunner  implements MarioGameI{
         enemiesInactive.add(new Enemy(2071, 192, true));
         return enemiesInactive;
     }
-    public void run() {
 
-        while (true) {
-           updateFrame();
-        }
+    public void run() {
+        updateFrame();
     }
 
     public void updateFrame() {
-        if(sleepPerFrameUpdate > 0) {
+        if (sleepPerFrameUpdate > 0) {
             try {
                 Thread.sleep(sleepPerFrameUpdate);
             } catch (InterruptedException e) {
@@ -72,11 +70,11 @@ public class MarioGameRunner  implements MarioGameI{
             }
         }
         gs = GameStateRunner.runGameStateSingleFrame(gs, is, wrapper);
-        if(gameFramesRun >4000) {
+        if (gameFramesRun > 4000) {
             gs.getPlayer().kill();
         }
 
-        if(gameListener != null) {
+        if (gameListener != null) {
             gameListener.onFrameUpdateRender(this);
         }
         gameFramesRun++;
@@ -91,7 +89,7 @@ public class MarioGameRunner  implements MarioGameI{
 
     @Override
     public void setButton(int button, boolean buttonValue) {
-        switch (button){
+        switch (button) {
             case GamepadButtons.A:
                 is.setJump(buttonValue);
                 break;
@@ -104,22 +102,6 @@ public class MarioGameRunner  implements MarioGameI{
         }
     }
 
-
-
-    @Override
-    public boolean getButton(int button) {
-        switch (button){
-            case GamepadButtons.A:
-                return is.isJump();
-            case GamepadButtons.Left:
-                return is.isLeftPressed();
-            case GamepadButtons.Right:
-                return is.isRigthPressed();
-            default:
-                return false;
-        }
-    }
-
     @Override
     public boolean isSlidingDownFlagpole() {
         return gs.getPlayer().getPlayerXPosition() > 3160;
@@ -127,15 +109,14 @@ public class MarioGameRunner  implements MarioGameI{
 
     @Override
     public int getTime() {
-        https://www.mariowiki.com/Time_Limit
-        return (int) ((gameFramesRun/60) * 2.5);
+        return (int) ((gameFramesRun / 60) * 2.5);
     }
 
     @Override
     public void reloadLevel() {
         gameFramesRun = 0;
         wrapper = new WorldWrapper(new FileBasedBuilder().build());
-        gs = new GameState(new Player(50, 192), generateDefaultEnemies(),new ArrayList<>());
+        gs = new GameState(new Player(50, 192), generateDefaultEnemies(), new ArrayList<>());
     }
 
     @Override
@@ -156,7 +137,7 @@ public class MarioGameRunner  implements MarioGameI{
     @Override
     public int readBlock(int y, int x) {
         int playerXPosition = getPlayerXPosition();
-        return wrapper.get(y*16 , playerXPosition + ( x* 16))  == 0 ? 0 :10;
+        return wrapper.get(y * 16, playerXPosition + (x * 16)) == 0 ? 0 : 10;
     }
 
     public GameState getGs() {

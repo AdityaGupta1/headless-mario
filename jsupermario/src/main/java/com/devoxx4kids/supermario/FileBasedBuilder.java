@@ -1,8 +1,11 @@
-package  com.devoxx4kids.supermario;
+package com.devoxx4kids.supermario;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-public class FileBasedBuilder implements MarioWorldBuilder{
+public class FileBasedBuilder implements MarioWorldBuilder {
 
 
     @Override
@@ -11,18 +14,17 @@ public class FileBasedBuilder implements MarioWorldBuilder{
         int[][] world = new int[240][3584];
         InputStream resourceAsStream = FileBasedBuilder.class.getResourceAsStream("/levelOne.txt");
         InputStreamReader in = new InputStreamReader(resourceAsStream);
-        try (BufferedReader reader = new BufferedReader(in);
-        ){
+        try (BufferedReader reader = new BufferedReader(in)) {
             String sCurrentLine;
             while ((sCurrentLine = reader.readLine()) != null) {
-                String[]s = sCurrentLine.split(" ");
+                String[] s = sCurrentLine.split(" ");
                 int type = Integer.valueOf(s[0]);
                 int y = Integer.valueOf(s[1]);
                 int x = Integer.valueOf(s[2]);
 
-                for(int i= 0; i < 16 ; i++)
-                    for(int j= 0; j< 16 ; j++) {
-                        world[y+ i][j + x] = type;
+                for (int i = 0; i < 16; i++)
+                    for (int j = 0; j < 16; j++) {
+                        world[y + i][j + x] = type;
                     }
             }
         } catch (IOException e) {

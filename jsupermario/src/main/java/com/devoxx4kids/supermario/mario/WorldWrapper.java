@@ -8,7 +8,7 @@ public class WorldWrapper {
         this.world = world;
     }
 
-    public int get(double x, double y){
+    public int get(double x, double y) {
 
         return world[(int) x][(int) y];
     }

@@ -4,7 +4,6 @@ import com.devoxx4kids.species.node.*;
 import com.devoxx4kids.species.node.serializationmodel.Container;
 import com.devoxx4kids.species.node.serializationmodel.SerializedConnection;
 import com.devoxx4kids.species.node.serializationmodel.SerializedNode;
-import com.devoxx4kids.supermario.Block;
 import com.devoxx4kids.supermario.MarioGameI;
 import com.devoxx4kids.supermario.MarioGameListener;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,7 +16,6 @@ import com.google.common.collect.Table;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -106,12 +104,8 @@ public class SingleNetwork implements Comparable<SingleNetwork>, MarioGameListen
     }
 
     private void mutateAddConnection() {
-        BiPredicate<Node, Node> findNew = (input, output) -> {
-            if (input == output ||input.getLevel() >= output.getLevel() || nodesToConnect.contains(input,output)) {
-                return true;
-            }
-            return false;
-        };
+        BiPredicate<Node, Node> findNew = (input, output) ->
+             input == output || input.getLevel() >= output.getLevel() || nodesToConnect.contains(input, output);
 
         Node input, output;
         Supplier<Node> randomNode = () -> nodes.get(random.nextInt(nodes.size()));
@@ -234,7 +228,7 @@ public class SingleNetwork implements Comparable<SingleNetwork>, MarioGameListen
             if (connections != null) {
                 connections.stream()
                         .map(connection -> new SerializedConnection(connection.getInput().getID(), connection.getWeight()))
-                        .forEach(serializedCollection -> serializedNode.addInputConnection(serializedCollection));
+                        .forEach(serializedNode::addInputConnection);
             }
 
             connections = hiddenToConnectionOutput.get(node);

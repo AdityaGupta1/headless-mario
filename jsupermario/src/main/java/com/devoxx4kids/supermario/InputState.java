@@ -47,7 +47,8 @@ public class InputState {
     public boolean isPreviousJumpReleaesed() {
         return isPreviousJumpReleaesed;
     }
-    public  void setPreviousJumpReleaesed(boolean isPreviousJumpReleaesed) {
+
+    public void setPreviousJumpReleaesed(boolean isPreviousJumpReleaesed) {
         this.isPreviousJumpReleaesed = isPreviousJumpReleaesed;
     }
 }

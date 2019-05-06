@@ -1,4 +1,4 @@
-package  com.devoxx4kids.supermario;
+package com.devoxx4kids.supermario;
 
 import com.devoxx4kids.supermario.mario.Enemy;
 import com.devoxx4kids.supermario.mario.Player;
@@ -27,16 +27,16 @@ public class GameState {
         return enemiesToRemove;
     }
 
+    public void setEnemiesToRemove(List<Enemy> enemiesToRemove) {
+        this.enemiesToRemove = enemiesToRemove;
+    }
+
     public List<Enemy> getEnemiesToRemoveFromAdded() {
         return enemiesToRemoveFromAdded;
     }
 
     public void setEnemiesToRemoveFromAdded(List<Enemy> enemiesToRemoveFromAdded) {
         this.enemiesToRemoveFromAdded = enemiesToRemoveFromAdded;
-    }
-
-    public void setEnemiesToRemove(List<Enemy> enemiesToRemove) {
-        this.enemiesToRemove = enemiesToRemove;
     }
 
     public Player getPlayer() {

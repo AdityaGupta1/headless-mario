@@ -9,23 +9,17 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 public class MarioGameRunnerGUI extends MarioGameRunner {
 
 
-    public static void main(String args[]) {
-        MarioGameRunnerGUI marioGameRunner = new MarioGameRunnerGUI(60);
-        marioGameRunner.run();
-    }
-
     public MarioGameRunnerGUI(int fps) {
 
-      super(fps);
+        super(fps);
 
         JFrame frame = new JFrame("FrameDemo");
         frame.setSize(new Dimension(480, 480));
-        comp = new MarioWorldPanel(super.gs,super.wrapper);
+        comp = new MarioWorldPanel(super.gs, super.wrapper);
         frame.add(comp);
         frame.setVisible(true);
         frame.addKeyListener(new KeyListener() {
@@ -46,10 +40,11 @@ public class MarioGameRunnerGUI extends MarioGameRunner {
                     case KeyEvent.VK_S:
                         is.setJump(true);
                         break;
-                        case KeyEvent.VK_R:
-                            wrapper = new WorldWrapper(new FileBasedBuilder().build());
-                            gs = new GameState(new Player(50, 192), generateDefaultEnemies(),generateDefaultEnemies());
-                            break;
+                    case KeyEvent.VK_R:
+                        wrapper = new WorldWrapper(new FileBasedBuilder().build());
+                        gs = new GameState(new Player(50, 192),
+                                generateDefaultEnemies(), generateDefaultEnemies());
+                        break;
                 }
             }
 
@@ -71,9 +66,15 @@ public class MarioGameRunnerGUI extends MarioGameRunner {
         frame.requestFocus();
     }
 
+    public static void main(String args[]) {
+        MarioGameRunnerGUI marioGameRunner = new MarioGameRunnerGUI(60);
+        while (true) {
+            marioGameRunner.run();
+        }
+    }
 
     public void updateFrame() {
-       super.updateFrame();
+        super.updateFrame();
         try {
             SwingUtilities.invokeAndWait(() -> comp.update(gs, wrapper));
         } catch (InterruptedException | InvocationTargetException e) {
@@ -84,14 +85,13 @@ public class MarioGameRunnerGUI extends MarioGameRunner {
 
 
     public void run() {
-        while (true) {
-            super.updateFrame();
-            try {
-                SwingUtilities.invokeAndWait(() -> comp.update(gs, wrapper));
-            } catch (InterruptedException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+
+        super.updateFrame();
+        try {
+            SwingUtilities.invokeAndWait(() -> comp.update(gs, wrapper));
+        } catch (InterruptedException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
-    }
+}
 

@@ -2,6 +2,7 @@ package com.devoxx4kids.supermario.mario;
 
 public class Player {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private static int WIDTH = 16;
     private static int HEIGHT = 16;
     private double playerXPosition;
@@ -16,7 +17,7 @@ public class Player {
         this.playerYPosition = playerYPosition;
     }
 
-    public void kill(){
+    public void kill() {
         this.isDead = true;
     }
 
@@ -28,12 +29,12 @@ public class Player {
         return playerYPosition;
     }
 
-    public double getBottomY(){
-        return playerYPosition  + HEIGHT;
+    public double getBottomY() {
+        return playerYPosition + HEIGHT;
     }
 
-    public double getRightX(){
-        return playerXPosition  + WIDTH;
+    public double getRightX() {
+        return playerXPosition + WIDTH;
     }
 
     public boolean isDead() {
@@ -44,12 +45,12 @@ public class Player {
         return verticalAcc;
     }
 
-    public double getHorizontalAcc() {
-        return horizontalAcc;
-    }
-
     public void setVerticalAcc(double verticalAcc) {
         this.verticalAcc = verticalAcc;
+    }
+
+    public double getHorizontalAcc() {
+        return horizontalAcc;
     }
 
     public void setHorizontalAcc(double horizontalAcc) {
@@ -58,10 +59,6 @@ public class Player {
 
     public void walk(int i) {
         playerXPosition += i;
-    }
-
-    public void updateHorzintalAcc(double v) {
-        horizontalAcc += v;
     }
 
     public void updateVerticalAcc(double jumpAccel) {
@@ -73,7 +70,7 @@ public class Player {
     }
 
     public void setJumpSpeed() {
-        jumpSpeed =verticalAcc;
+        jumpSpeed = verticalAcc;
     }
 
     public double getJumpSpeed() {

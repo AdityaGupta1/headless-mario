@@ -1,29 +1,25 @@
 package com.devoxx4kids.supermario;
+
 import com.devoxx4kids.species.BlockReader;
 
-import static nintaco.api.GamepadButtons.*;
 public interface MarioGameI extends BlockReader {
 
-        int getPlayerXPosition();
+    int getPlayerXPosition();
 
-        public static final int[] buttons = {A, B, Up, Down, Left, Right};
+    void setButton(int button, boolean buttonValue);
 
+    boolean isSlidingDownFlagpole();
 
-        public   void setButton(int button, boolean buttonValue);
-        public   boolean getButton(int button);
-
-        public   boolean isSlidingDownFlagpole();
-
-        public   int getTime();
+    int getTime();
 
 
-        public void reloadLevel();
+    void reloadLevel();
 
-        boolean isDead();
+    boolean isDead();
 
-        void setDead();
+    void setDead();
 
-        void reregisterGameWrapper(MarioGameListener marioGameListener);
+    void reregisterGameWrapper(MarioGameListener marioGameListener);
 
-        void updateFrame();
+    void updateFrame();
 }

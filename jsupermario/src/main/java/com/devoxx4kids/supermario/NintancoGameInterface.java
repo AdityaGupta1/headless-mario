@@ -2,23 +2,24 @@ package com.devoxx4kids.supermario;
 
 import nintaco.api.API;
 
-public class NintancoGameInterface implements MarioGameI{
+public class NintancoGameInterface implements MarioGameI {
 
-    private API api;
-
-    public NintancoGameInterface(API api){
-        this.api = api;
-    }
     int playerPositionTagForBlocks = -1;
     Block[][] blocks;
+    private API api;
+
+    public NintancoGameInterface(API api) {
+        this.api = api;
+    }
+
     @Override
-    public   boolean isDead() {
+    public boolean isDead() {
         return read(0x00E) == 0x0B;
     }
 
 
     @Override
-    public   void setDead() {
+    public void setDead() {
         write(0x00E, 0x0B);
     }
 
@@ -58,7 +59,7 @@ public class NintancoGameInterface implements MarioGameI{
             }
 
             int x = read(0x0087 + i) + 256 * read(0x006E + i) - getPlayerXPosition() + 16;
-            if (x < 0  || x > 256) {
+            if (x < 0 || x > 256) {
                 continue;
             }
 
@@ -85,12 +86,11 @@ public class NintancoGameInterface implements MarioGameI{
     }
 
     @Override
-    public   void setButton(int button, boolean buttonValue) {
+    public void setButton(int button, boolean buttonValue) {
         api.writeGamepad(0, button, buttonValue);
     }
 
-    @Override
-    public   boolean getButton(int button) {
+    public boolean getButton(int button) {
         return api.readGamepad(0, button);
     }
 
@@ -101,7 +101,7 @@ public class NintancoGameInterface implements MarioGameI{
 
     @Override
     public int getTime() {
-        return 100 * read(0x07F8) + 10 * read(0x07F9) + 1 * read(0x07FA);
+        return 100 * read(0x07F8) + 10 * read(0x07F9) + read(0x07FA);
     }
 
     @Override
@@ -113,16 +113,16 @@ public class NintancoGameInterface implements MarioGameI{
         return api.readCPU(address);
     }
 
-    private   void write(int address, int value) {
+    private void write(int address, int value) {
         api.writeCPU(address, value);
     }
 
     @Override
     public int readBlock(int y, int x) {
-        if (playerPositionTagForBlocks != getPlayerXPosition()){
+        if (playerPositionTagForBlocks != getPlayerXPosition()) {
             blocks = readBlocks();
             playerPositionTagForBlocks = getPlayerXPosition();
         }
-        return blocks[x][y - 2  <  0 ? 0 :y - 2  ] == Block.NONE ? 0 : 10;
+        return blocks[x][y - 2 < 0 ? 0 : y - 2] == Block.NONE ? 0 : 10;
     }
 }

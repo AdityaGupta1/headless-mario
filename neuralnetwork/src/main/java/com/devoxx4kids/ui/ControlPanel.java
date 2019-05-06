@@ -7,8 +7,6 @@ import com.devoxx4kids.species.GAMachineObserver;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,9 +91,6 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
 
 
     }
-
-
-
 
     @Override
     public void gaEventOccured(GAEvent gaEvent) {

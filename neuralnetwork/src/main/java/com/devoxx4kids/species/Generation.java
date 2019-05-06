@@ -15,8 +15,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
-import static com.devoxx4kids.Constants.*;
-
 public class Generation {
     private static final Logger log = LogManager.getLogger(Generation.class);
     private List<Species> species = new ArrayList<>();
@@ -31,7 +29,7 @@ public class Generation {
     private int purges = 0;
     private int generationsToRun;
     private int generationsRun;
-    private int concurrentRuns = 4;
+    private int concurrentRuns;
     private ExecutorService executor;
     private List<GAMachineObserver> observers;
     private final RunConfiguration runConfiguration;

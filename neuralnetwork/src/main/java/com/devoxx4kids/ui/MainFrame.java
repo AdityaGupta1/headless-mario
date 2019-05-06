@@ -1,5 +1,4 @@
 package com.devoxx4kids.ui;
-import nintaco.Main;
 
 import javax.swing.*;
 import java.awt.*;

@@ -29,8 +29,8 @@ public class GAMachine  implements GAMachineObserver {
 
     public GAMachine(GAMachineObserver oberserver,RunConfiguration runConfiguration) {
         this.runConfiguration =runConfiguration;
-        Stack<MarioGameI> headlessRuns = new Stack();
-        IntStream.range(0,runConfiguration.getParallelLevel()).mapToObj(e -> new MarioGameRunner(-1)).forEach(g -> headlessRuns.push(g));
+        Stack<MarioGameI> headlessRuns = new Stack<>();
+        IntStream.range(0,runConfiguration.getParallelLevel()).mapToObj(e -> new MarioGameRunner(-1)).forEach(headlessRuns::push);
         generation = new Generation(new GameWrapperPool(headlessRuns),seededGenerator,
                 Arrays.asList(this::gaEventOccured,oberserver),runConfiguration);
         generation.runNextGeneration();
@@ -70,7 +70,7 @@ public class GAMachine  implements GAMachineObserver {
                         highestValuedNetwork.setAgressiveRestartMode(false);
                         marioGameRunnerGUI.setListener(highestValuedNetwork);
 
-                        while (true && !marioGameRunnerGUI.getGs().getPlayer().isDead()) {
+                        while (!marioGameRunnerGUI.getGs().getPlayer().isDead()) {
                             marioGameRunnerGUI.updateFrame();
                         }
                     }).start();

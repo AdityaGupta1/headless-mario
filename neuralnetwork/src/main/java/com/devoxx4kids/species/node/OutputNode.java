@@ -4,7 +4,6 @@ package com.devoxx4kids.species.node;
 import com.devoxx4kids.Constants;
 import com.devoxx4kids.species.BlockReader;
 import com.devoxx4kids.species.SingleNetwork;
-import com.devoxx4kids.supermario.Block;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class OutputNode extends NonInputNode<Boolean> {
                 '}';
     }
     
-    static private enum buttons {
+    private enum buttons {
          A(0),
          B(1),
          Select(2),
