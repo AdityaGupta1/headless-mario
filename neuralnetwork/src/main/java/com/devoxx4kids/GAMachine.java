@@ -5,6 +5,7 @@ import com.devoxx4kids.supermario.MarioGameI;
 import com.devoxx4kids.supermario.MarioGameRunner;
 import com.devoxx4kids.supermario.MarioGameRunnerGUI;
 import com.devoxx4kids.supermario.NintancoGameInterface;
+import com.devoxx4kids.ui.EventCtx;
 import nintaco.App;
 import nintaco.Main;
 import nintaco.api.API;
@@ -56,7 +57,7 @@ public class GAMachine  implements GAMachineObserver {
     }
 
     @Override
-    public void gaEventOccured(GAEvent gaEvent) {
+    public void gaEventOccured(GAEvent gaEvent, EventCtx eventCtx) {
 
         if(gaEvent == GAEvent.GAME_COMPLETE  && !isNintancoRunning){
             try {

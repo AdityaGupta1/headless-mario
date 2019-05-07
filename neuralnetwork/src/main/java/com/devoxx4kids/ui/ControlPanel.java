@@ -4,13 +4,17 @@ import com.devoxx4kids.GAMachine;
 import com.devoxx4kids.RunConfiguration;
 import com.devoxx4kids.species.GAEvent;
 import com.devoxx4kids.species.GAMachineObserver;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -18,7 +22,8 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
 
     static Function<Integer,String> displayDouble = (val) ->  "" + val/100.0;
     static Function<Integer,String> displayInt = (val) ->  "" + val;
-
+    private XYSeries seriesMean;
+    private XYSeries seriesTop;
     private UIBasedRunConfigurationBuilder uiBasedRunConfigurationBuilder = new UIBasedRunConfigurationBuilder(10,RunConfiguration.RUN_TYPE.HEADLESS,4);
     private List<ConfigurationOption> configurables = new ArrayList<>();
     {
@@ -33,18 +38,16 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
         configurables.add(new ConfigurationOption("Stale threshold", (value) -> uiBasedRunConfigurationBuilder.setStaleThreshold(value.intValue()),1,100,10,displayInt));
     }
 
-    private Map<JSlider,JLabel> sliderToValue = new HashMap<>();
-
-    volatile boolean   isRunning = false;
+    private volatile boolean   isRunning = false;
     private  int generationsToRun = 10;
     private int generationsRan = 0;
-    ControlPanel cp;
-    JProgressBar progressBar;
+    private ControlPanel cp;
+    private JProgressBar progressBar;
     JButton run = new JButton("TRAIN");
     public ControlPanel() {
         super();
         cp = this;
-        this.setSize(new Dimension(400,400));
+        this.setSize(new Dimension(800,1000));
 
         configurables.stream().forEach(e -> {
             JLabel label = new JLabel(e.name);
@@ -61,8 +64,6 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
             });
         });
 
-
-
         ButtonGroup bg =	new ButtonGroup();
         JRadioButton headless = new JRadioButton("Headless");
         headless.addActionListener(e -> uiBasedRunConfigurationBuilder.setDisplayer(RunConfiguration.RUN_TYPE.HEADLESS));
@@ -75,6 +76,8 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
         add(headless);
         add(nintanco);
         run.addActionListener(e -> {
+            seriesMean.clear();
+            seriesTop.clear();
             run.setEnabled(false);
             if(e.getSource() != run){
                 return;
@@ -83,17 +86,37 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
             if(!isRunning) {
                 isRunning = true;
                 new GAMachine(cp,uiBasedRunConfigurationBuilder.createUIBasedRunConfiguration());
-            }
+        }
         });
         this.add(run);
         this.progressBar = new JProgressBar();
         add(progressBar);
 
+       seriesMean =  new XYSeries("Fitness Data");
+        seriesTop =  new XYSeries("Fitness Top");
+        XYSeriesCollection dataset = new XYSeriesCollection(seriesMean);
+        dataset.addSeries(seriesTop);
+        JFreeChart lineChart =  ChartFactory.createXYLineChart(
+                "Fitness",
+                "Fitness",
+                "Generation",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        ChartPanel chartPanel = new ChartPanel( lineChart );
+        chartPanel.setSize(new Dimension(400,400));
+
+        add(chartPanel);
+
 
     }
 
     @Override
-    public void gaEventOccured(GAEvent gaEvent) {
+    public void gaEventOccured(GAEvent gaEvent, EventCtx eventCtx) {
 
         if(gaEvent == GAEvent.GAME_COMPLETE ){
             run.setEnabled(true);
@@ -102,6 +125,11 @@ public class ControlPanel extends JPanel implements GAMachineObserver {
             isRunning = false;
             validate();
         } else {
+
+            if(eventCtx.getGeneration() % 10 == 0){
+                seriesMean.add(eventCtx.getGeneration(),eventCtx.getMeanFitness());
+                seriesTop.add(eventCtx.getGeneration(),eventCtx.getTopFitness());
+            }
             generationsRan++;
             progressBar.setValue((int) (((double) generationsRan / generationsToRun) * 100));
         }
