@@ -3,6 +3,7 @@ package com.devoxx4kids.species;
 import com.devoxx4kids.NetworkBuilder;
 import com.devoxx4kids.RunConfiguration;
 import com.devoxx4kids.supermario.MarioGameI;
+import com.devoxx4kids.ui.EventCtx;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +29,7 @@ public class Generation {
     private int staleGenerations = 0;
     private int purges = 0;
     private int generationsToRun;
-    private int generationsRun;
+    private int generationsCompleted;
     private int concurrentRuns;
     private ExecutorService executor;
     private List<GAMachineObserver> observers;
@@ -91,13 +92,13 @@ public class Generation {
 
 
         //@TODO will notify for each thread
-        if(generationsToRun < generationsRun ){
-            observers.stream().forEach(g -> g.gaEventOccured(GAEvent.GAME_COMPLETE));
+        if(generationsToRun < generationsCompleted){
+            observers.stream().forEach(g -> g.gaEventOccured(GAEvent.GAME_COMPLETE, new EventCtx()));
             return;
         }
 
         if(networksToRun.isEmpty() && networksRunning.isEmpty()){
-            generationsRun++;
+            generationsCompleted++;
             advance();
             runNextGeneration();
         }else {
@@ -108,9 +109,11 @@ public class Generation {
     }
 
     private void advance() {
-        observers.stream().forEach(g -> g.gaEventOccured(GAEvent.INSTANCE_COMPLETE));
+
         networksCompleted.sort((o1, o2) -> o2.getFitness() - o1.getFitness());
         double mean = networksCompleted.stream().mapToInt(SingleNetwork::getFitness).sorted().average().orElse(0);
+        observers.stream().forEach(g -> g.gaEventOccured(GAEvent.INSTANCE_COMPLETE,new EventCtx(generationsCompleted,mean,
+                networksCompleted.get(0).getFitness())));
         networksCompleted.stream()
                 .limit(runConfiguration.getGenerationTopNumber())
                 .forEach(network -> log.trace("UUID: {} Fitness: {}",network.getId(), network.getFitness()));
